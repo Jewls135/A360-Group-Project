@@ -13,7 +13,12 @@ class FlightManagementSystem {
 
     public static void main(String[] args) {
         FlightManagementSystem fms = new FlightManagementSystem();
-        fms.displayOptions();
+        try {
+            fms.displayOptions();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 
     private String getUserInputString() {
@@ -35,7 +40,6 @@ class FlightManagementSystem {
         int input = -1;
 
         while (true) {
-            
 
             try {
                 System.out.print("\nInput: ");
@@ -182,7 +186,7 @@ class FlightManagementSystem {
         destinations.add(startAirport);
 
         // Getting more airports
-        while (true) {
+        while (destinations.size() < 2) {
             System.out.println("Enter destination airport (ICAO or part of name), or type 'done' to finish:");
             String destinationInput = getUserInputString();
 
@@ -217,14 +221,25 @@ class FlightManagementSystem {
     }
 
     private ArrayList<Airport> findMatchingAirports(String input) {
-        ArrayList<Airport> matchingAirports = new ArrayList<>();
+        ArrayList<Airport> exactMatches = new ArrayList<>();
+        ArrayList<Airport> partialMatches = new ArrayList<>();
+        String search = input.toLowerCase();
+
         for (Airport airport : airportManager.getAirports()) {
-            if (airport.getIdentifier().equalsIgnoreCase(input)
-                    || airport.getName().toLowerCase().contains(input.toLowerCase())) {
-                matchingAirports.add(airport);
+            String identifier = airport.getIdentifier().toLowerCase();
+            String name = airport.getName().toLowerCase();
+
+            if (identifier.equals(search) || name.equals(search)) {
+                exactMatches.add(airport);
+            } else if (identifier.contains(search) || name.contains(search)) {
+                partialMatches.add(airport);
             }
         }
-        return matchingAirports;
+
+        // Return exact matches first, then partial matches (they wont overlap b/c
+        // arraylist)
+        exactMatches.addAll(partialMatches);
+        return exactMatches;
     }
 
     private void manageAirports() {

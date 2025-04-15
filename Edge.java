@@ -3,7 +3,7 @@ import java.lang.Math;
 public class Edge {
     private Airport originNode;
     private Airport destinationNode;
-    private double distance;
+    private double distance; // Knots
     private double heading;
     private final double KNOT_CONVERSION = 60;
 
@@ -30,14 +30,14 @@ public class Edge {
         double lon1 = Math.toRadians(originNode.getLongitude());
         double lat2 = Math.toRadians(destinationNode.getLatitude());
         double lon2 = Math.toRadians(destinationNode.getLongitude());
-    
+
         double dLon = lon2 - lon1;
         double y = Math.sin(dLon) * Math.cos(lat2);
         double x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
-    
-        return (Math.toDegrees(Math.atan2(y, x)) + 360) % 360; // Fixed to account for negative angle cases (normalization)
+
+        return (Math.toDegrees(Math.atan2(y, x)) + 360) % 360; // Fixed to account for negative angle cases
+                                                               // (normalization)
     }
-    
 
     public Airport getOriginNode() {
         return originNode;
