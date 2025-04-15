@@ -11,9 +11,9 @@ public class Airplane {
         setKey(newKey);
         setMakeAndModel(makeAndModel);
         setType(type);
-        setTankSize(tankSize);
-        setFuelBurnRate(fuelBurnRate);
-        setAirspeed(airspeed);
+        setTankSize(Math.round(tankSize * 10000.0) / 10000.0);
+        setFuelBurnRate(Math.round(fuelBurnRate * 10000.0) / 10000.0);
+        setAirspeed(Math.round(airspeed * 10000.0) / 10000.0);
     }
 
     public int getKey() {
@@ -71,7 +71,10 @@ public class Airplane {
     public String displayInfo() {
         return "Key: " + key +
                 ", Make and Model: " + makeAndModel +
-                ", Type: " + type +
+                ", Type: "
+                + ((type == 1) ? "Jet"
+                        : (type == 2) ? "Turboprop" : (type == 3) ? "Prop plane" : "Unknown Type of Plane")
+                +
                 ", Tank Size: " + tankSize + " Gallons" +
                 ", Fuel Burn Rate: " + fuelBurnRate + " G/h" +
                 ", Airspeed: " + airspeed + " Km/h";

@@ -12,8 +12,8 @@ public class Airport {
             HashMap<String, Double> frequencies, String[] fuelTypes) {
         setIdentifier(identifier);
         setName(name);
-        setLatitude(latitude);
-        setLongitude(longitude);
+        setLatitude(Math.round(latitude * 10000.0) / 10000.0);
+        setLongitude(Math.round(longitude * 10000.0) / 10000.0);
         setFrequencies(frequencies);
         setFuelTypes(fuelTypes);
     }
@@ -55,7 +55,11 @@ public class Airport {
     }
 
     private void setFrequencies(HashMap<String, Double> newFrequencies) {
-        frequencies = newFrequencies;
+        frequencies = new HashMap<>();
+        for (HashMap.Entry<String, Double> entry : newFrequencies.entrySet()) {
+            double rounded = Math.round(entry.getValue() * 1000.0) / 1000.0;
+            frequencies.put(entry.getKey(), rounded);
+        }
     }
 
     public String[] getFuelTypes() {

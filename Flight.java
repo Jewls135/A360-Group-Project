@@ -19,6 +19,10 @@ public class Flight {
             ArrayList<Edge> currentLegs = findRoute(destinationAirports.get(i), destinationAirports.get(i + 1),
                     selectedPlane);
 
+            if (currentLegs == null) { // Should only return null above when the destination/origin are the same so return early
+                return;
+            }
+
             if (currentLegs.isEmpty()) {
                 System.out.println("Flight plan not possible between " +
                         destinationAirports.get(i).getName() + " and " +
@@ -33,6 +37,12 @@ public class Flight {
     }
 
     private ArrayList<Edge> findRoute(Airport fromAirport, Airport toAirport, Airplane selectedAirplane) {
+
+        if (fromAirport.equals(toAirport)) {
+            System.out.println("Origin and destination are the same, routing is not needed!");
+            return null;
+        }
+
         ArrayList<Edge> route = new ArrayList<>();
         HashMap<Airport, Double> distanceMap = new HashMap<>();
         PriorityQueue<Airport> queue = new PriorityQueue<>(
@@ -41,89 +51,64 @@ public class Flight {
         HashMap<Airport, Double> fuelRemaining = new HashMap<>();
 
         distanceMap.put(fromAirport, 0.0);
-        fuelRemaining.put(fromAirport, selectedAirplane.getTankSize()); // Start with full tank
+        fuelRemaining.put(fromAirport, selectedAirplane.getTankSize());
         queue.add(fromAirport);
 
         System.out.println("Starting route search from " + fromAirport.getName() + " to " + toAirport.getName());
-        System.out.println("Selected airplane: " + selectedAirplane.getMakeAndModel() + ", Tank size: "
-                + selectedAirplane.getTankSize() + ", Fuel burn rate: " + selectedAirplane.getFuelBurnRate());
+        System.out.println("Selected airplane: " + selectedAirplane.displayInfo() + "\n");
 
         while (!queue.isEmpty()) {
             Airport current = queue.poll();
-            System.out.println("\nProcessing airport: " + current.getName());
 
             if (current.equals(toAirport)) {
-                System.out.println("Destination airport reached: " + current.getName());
                 break;
             }
 
             for (Edge edge : airportsGraph.getListings().getOrDefault(current, new ArrayList<>())) {
                 Airport nextAirport = edge.getDestinationNode();
-                double legDistance = edge.getDistance() * 1.852;
+                double legDistance = edge.getDistance() * KNOT_CONVERSION;
 
-                double airspeed = selectedAirplane.getAirspeed(); // assumed in km/h
+                double airspeed = selectedAirplane.getAirspeed(); // in km/h
                 double fuelBurnRate = selectedAirplane.getFuelBurnRate(); // in gallons/hour
 
                 double flightTimeHours = legDistance / airspeed;
                 double fuelRequired = flightTimeHours * fuelBurnRate;
 
-                double currentFuel = fuelRemaining.get(current);
-
-                System.out.println("  Checking route to: " + nextAirport.getName());
-                System.out.println("    Distance: " + legDistance);
-                System.out.println("    Fuel required: " + fuelRequired);
-                System.out.println("    Fuel remaining: " + currentFuel);
+                double currentFuel = fuelRemaining.getOrDefault(current, 0.0);
 
                 String requiredFuel = (selectedAirplane.getType() == 3) ? "AVGAS" : "JA-a";
                 boolean canRefuel = Arrays.asList(nextAirport.getFuelTypes()).contains(requiredFuel);
-                System.out.println("    Can refuel at destination? " + canRefuel);
 
-                if (currentFuel < fuelRequired) {
-                    System.out.println("    Not enough fuel for this leg.");
+                double usableFuel = currentFuel;
+
+                if (usableFuel < fuelRequired) {
                     if (!canRefuel) {
-                        System.out.println("    Cannot refuel at " + nextAirport.getName() + ". Skipping this route.");
                         continue;
                     }
-                    System.out.println("    Refueling before leg.");
-                    currentFuel = selectedAirplane.getTankSize(); // Refuel
-                    if (currentFuel < fuelRequired) {
-                        System.out.println("    Even after refueling, fuel is insufficient. Skipping.");
-                        try{
-                            
-                        Thread.sleep(100000);
-                        } catch(Exception e){
-
-                        }
+                    usableFuel = selectedAirplane.getTankSize();
+                    if (usableFuel < fuelRequired) {
                         continue;
                     }
                 }
 
-                double remainingFuelAfterLeg = currentFuel - fuelRequired;
-                double nextFuelLevel = canRefuel ? selectedAirplane.getTankSize() : remainingFuelAfterLeg;
+                double remainingFuelAfterLeg = usableFuel - fuelRequired;
+                double newFuelLevel = canRefuel ? selectedAirplane.getTankSize() : remainingFuelAfterLeg;
                 double newDistance = distanceMap.get(current) + legDistance;
 
-                System.out.println("    New calculated distance to " + nextAirport.getName() + ": " + newDistance);
-                System.out.println("    Fuel left after leg: " + nextFuelLevel);
-
                 if (newDistance < distanceMap.getOrDefault(nextAirport, Double.MAX_VALUE)) {
-                    System.out.println("    Updating route to " + nextAirport.getName());
                     distanceMap.put(nextAirport, newDistance);
-                    fuelRemaining.put(nextAirport, nextFuelLevel);
+                    fuelRemaining.put(nextAirport, newFuelLevel);
                     previousEdges.put(nextAirport, edge);
                     queue.add(nextAirport);
-                } else {
-                    System.out.println("    Existing route to " + nextAirport.getName() + " is shorter. Skipping.");
+
                 }
             }
         }
 
-        System.out.println("\nReconstructing path...");
         Airport step = toAirport;
         while (previousEdges.containsKey(step)) {
             Edge edge = previousEdges.get(step);
             route.add(0, edge);
-            System.out.println(
-                    "  Step back: " + edge.getOriginNode().getName() + " -> " + edge.getDestinationNode().getName());
             step = edge.getOriginNode();
         }
 
@@ -137,12 +122,12 @@ public class Flight {
     }
 
     private double calculateLegFlightTime(Edge leg, Airplane selectedAirplane) {
-        double distanceInKm = leg.getDistance();
-        double airspeed = selectedAirplane.getAirspeed();
-        double timeInHours = (distanceInKm / KNOT_CONVERSION) / airspeed;
+        double distanceInKnots = leg.getDistance();
+        double distanceInKm = distanceInKnots * KNOT_CONVERSION;
+        double airspeedInKmh = selectedAirplane.getAirspeed();
+        double timeInHours = distanceInKm / airspeedInKmh;
         return timeInHours;
-
-    } // End of method calculateLegFlightTime
+    }
 
     private String displayFlightPlan(ArrayList<Edge> flightLegs, Airplane selectedAirplane) {
         StringBuilder flightPlan = new StringBuilder();
@@ -157,9 +142,9 @@ public class Flight {
             double time = calculateLegFlightTime(leg, selectedAirplane);
 
             flightPlan.append((i + 1) + ". " + from + " to " + to + "\n" +
-                    "   Distance: " + String.format("%.2f km", distance) + "\n" +
+                    "   Distance: " + String.format("%.2f Knots", distance) + "\n" +
                     "   Heading: " + String.format("%.1f°", heading) + "\n" +
-                    "   Time Taken: " + String.format("%.2f hours", time) + "\n" + LINE_SEPARATOR + "\n");
+                    "   Time Taken: " + String.format("%.2f Hours", time) + "\n" + LINE_SEPARATOR + "\n");
         }
         return flightPlan.toString();
     } // End of method displayFlightPlan

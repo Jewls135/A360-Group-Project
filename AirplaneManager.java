@@ -6,10 +6,13 @@ public class AirplaneManager {
 
     public AirplaneManager() {
         airplanes = new ArrayList<>();
-        loadAirplanesFromCSV("Airplanes.csv");
+        // Incase we can't load from main file, load from tmp
+        if (!loadAirplanesFromCSV("Airplanes.csv")){
+            loadAirplanesFromCSV("Airplanes.csv.tmp");
+        }
     }
 
-    private void loadAirplanesFromCSV(String fileName) {
+    private boolean loadAirplanesFromCSV(String fileName) {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -26,31 +29,44 @@ public class AirplaneManager {
                     airplanes.add(airplane);
                 }
             }
+            return true;
         } catch (IOException e) {
             System.out.println("Error reading file: " + e.getMessage());
         }
+        return false;
     }
 
     private void saveAirplanesToCSV(String fileName) {
-        // New file for error handling incase user cuts program off short
         File tempFile = new File(fileName + ".tmp");
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile))) {
-            for (Airplane airplane : airplanes) {
-                bw.write(airplane.toCSV());
-                bw.newLine();
-            }
-            
-            /*  File writing finished so now we can update
-                First rename temp file to original file
-                Then delete temp once all has finished */ 
+        for(int i = 0; i < 3; i++) {
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile))) {
 
-            File originalFile = new File(fileName);
-            if (originalFile.exists()) {
-                originalFile.delete();  
+                for (Airplane airplane : airplanes) {
+                    bw.write(airplane.toCSV());
+                    bw.newLine();
+                }
+
+                break;
+            } catch (IOException e) {
+                System.out.println("Error writing to .tmp file, " + "Attempt: " + i);
+                e.printStackTrace();
             }
-            tempFile.renameTo(originalFile); 
-        } catch (IOException e) {
-            System.out.println("Error writing to file: " + e.getMessage());
+        }
+        
+        File fileToWrite = new File(fileName);
+        for(int i = 0; i < 3; i++) {
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileToWrite))) {
+
+                for (Airplane airplane : airplanes) {
+                    bw.write(airplane.toCSV());
+                    bw.newLine();
+                }
+
+                break;
+            } catch (IOException e) {
+                System.out.println("Error writing to .csv file, " + "Attempt: " + i);
+                e.printStackTrace();
+            }
         }
     }
 
@@ -81,7 +97,7 @@ public class AirplaneManager {
                 airplanes.get(i).setKey(i);  
             }
     
-            saveAirplanesToCSV("Airplanes.csv");  // Save to CSV after deleting
+            saveAirplanesToCSV("Airplanes.csv"); 
         } else {
             System.out.println("Could not delete Airplane, Airplane not found");
         }
@@ -90,6 +106,7 @@ public class AirplaneManager {
     public void editAirplane(int airplaneIndex, Airplane airplane) {
         if (exists(airplanes.get(airplaneIndex))) {
             airplanes.set(airplaneIndex, airplane);
+            saveAirplanesToCSV("Airplanes.csv"); 
         } else {
             System.out.println("Could not edit Airplane, Airplane not found");
         }
@@ -106,11 +123,11 @@ public class AirplaneManager {
 
     public void displayAllAirplanes() {
         if (airplanes.isEmpty()) {
-            System.out.println("No airports available to display.");
+            System.out.println("No Airplanes available to display.");
         } else {
             for (Airplane airplane : airplanes) {
                 String airplaneInformation = airplane.displayInfo(); 
-                System.out.println(airplaneInformation + "\n");
+                System.out.println(airplaneInformation);
             }
         }
     }
