@@ -20,7 +20,9 @@ class FlightManagementSystem {
         String input = "";
         while (true) {
             try {
+                System.out.print("\nInput: ");
                 input = scanner.nextLine();
+                System.out.print("\n");
                 break;
             } catch (Exception e) {
                 System.out.println("Error reading input: " + e.getMessage());
@@ -33,13 +35,20 @@ class FlightManagementSystem {
         int input = -1;
 
         while (true) {
-            String line = scanner.nextLine();
+            
 
             try {
+                System.out.print("\nInput: ");
+                String line = scanner.nextLine();
+                System.out.print("\n");
                 input = Integer.parseInt(line);
                 break;
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input, please enter a valid integer.");
+            } catch (Exception e) {
+                if (e instanceof NumberFormatException) {
+                    System.out.println("Invalid input, please enter a valid Integer. (Whole number)");
+                } else {
+                    System.out.println("Error, please try again: " + e.getMessage());
+                }
             }
         }
 
@@ -50,13 +59,19 @@ class FlightManagementSystem {
         double input;
 
         while (true) {
-            String line = scanner.nextLine();
 
             try {
+                System.out.print("\nInput: ");
+                String line = scanner.nextLine();
+                System.out.print("\n");
                 input = Double.parseDouble(line);
                 break;
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input, please enter a valid number.");
+            } catch (Exception e) {
+                if (e instanceof NumberFormatException) {
+                    System.out.println("Invalid input, please enter a valid number.");
+                } else {
+                    System.out.println("Error, please try again: " + e.getMessage());
+                }
             }
         }
 
