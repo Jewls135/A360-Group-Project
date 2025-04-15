@@ -30,7 +30,7 @@ public class Edge {
         double lon1 = Math.toRadians(originNode.getLongitude());
         double lat2 = Math.toRadians(destinationNode.getLatitude());
         double lon2 = Math.toRadians(destinationNode.getLongitude());
-
+    
         double dLon = lon2 - lon1;
         double y = Math.sin(dLon) * Math.cos(lat2);
         double x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);

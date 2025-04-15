@@ -6,10 +6,12 @@ public class AirportManager {
 
     public AirportManager() {
         airports = new ArrayList<>();
-        loadAirportsFromCSV("Airports.csv");
+        if (!loadAirportsFromCSV("Airports.csv")){
+            loadAirportsFromCSV("Airports.csv.tmp");
+        }
     }
 
-    private void loadAirportsFromCSV(String fileName) {
+    private boolean loadAirportsFromCSV(String fileName) {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -44,32 +46,45 @@ public class AirportManager {
 
                 Airport airport = new Airport(ICAO, name, latitude, longitude, frequencies, fuelTypes);
                 airports.add(airport);
-
             }
+            return true;
         } catch (IOException e) {
             System.out.println("Error reading file: " + e.getMessage());
         }
+        return false;
     }
 
     private void saveAirportsToCSV(String fileName) {
-        // New file for error handling in case user cuts program off short
         File tempFile = new File(fileName + ".tmp");
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile))) {
-            for (Airport airport : airports) {
-                // Writing each airport's data to CSV format
-                bw.write(airport.toCSV());
-                bw.newLine();
-            }
+        for(int i = 0; i < 3; i++) {
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile))) {
 
-            // File writing finished, now we can update
-            // First rename the temp file to the original file, then delete the temp file
-            File originalFile = new File(fileName);
-            if (originalFile.exists()) {
-                originalFile.delete();
+                for (Airport airport : airports) {
+                    bw.write(airport.toCSV());
+                    bw.newLine();
+                }
+
+                break;
+            } catch (IOException e) {
+                System.out.println("Error writing to .tmp file, " + "Attempt: " + i);
+                e.printStackTrace();
             }
-            tempFile.renameTo(originalFile);
-        } catch (IOException e) {
-            System.out.println("Error writing to file: " + e.getMessage());
+        }
+
+        File fileToWrite = new File(fileName);
+        for(int i = 0; i < 3; i++) {
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileToWrite))) {
+
+                for (Airport airport : airports) {
+                    bw.write(airport.toCSV());
+                    bw.newLine();
+                }
+
+                break;
+            } catch (IOException e) {
+                System.out.println("Error writing to .csv file, " + "Attempt: " + i);
+                e.printStackTrace();
+            }
         }
     }
 
@@ -99,11 +114,13 @@ public class AirportManager {
         }
     }
 
-    public void editAirport(int airportIndex, Airport newAirport) {
-        if (airportIndex >= 0 && airportIndex < airports.size() && exists(airports.get(airportIndex))) {
-            airports.set(airportIndex, newAirport);
-        } else {
-            System.out.println("Could not edit Airport, Airport not found");
+    public void editAirport(Airport oldAirport, Airport newAirport) {
+        System.out.println("in editAirport");
+        if(airports.contains(oldAirport)){
+            System.out.println("in if");
+            airports.remove(oldAirport);
+            airports.add(newAirport);
+            saveAirportsToCSV("Airports.csv");
         }
     }
 
