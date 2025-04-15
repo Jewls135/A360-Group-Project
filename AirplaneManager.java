@@ -110,7 +110,7 @@ public class AirplaneManager {
         } else {
             for (Airplane airplane : airplanes) {
                 String airplaneInformation = airplane.displayInfo(); 
-                System.out.println(airplaneInformation);
+                System.out.println(airplaneInformation + "\n");
             }
         }
     }

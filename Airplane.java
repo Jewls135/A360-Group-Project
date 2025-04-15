@@ -70,10 +70,10 @@ public class Airplane {
 
     public String displayInfo() {
         return "Key: " + key +
-                "\nMake and Model: " + makeAndModel +
-                "\nType: " + type +
-                "\nTank Size: " + tankSize + " gallons" +
-                "\nFuel Burn Rate: " + fuelBurnRate + " gallons/hour" +
-                "\nAirspeed: " + airspeed + " mph";
+                ", Make and Model: " + makeAndModel +
+                ", Type: " + type +
+                ", Tank Size: " + tankSize + " Gallons" +
+                ", Fuel Burn Rate: " + fuelBurnRate + " G/h" +
+                ", Airspeed: " + airspeed + " Km/h";
     }
 }

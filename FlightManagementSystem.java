@@ -11,8 +11,9 @@ class FlightManagementSystem {
     AirplaneManager airplaneManager;
     private static final Scanner scanner = new Scanner(System.in);
 
-    public void main() {
-        displayOptions();
+    public static void main(String[] args) {
+        FlightManagementSystem fms = new FlightManagementSystem();
+        fms.displayOptions();
     }
 
     private String getUserInputString() {

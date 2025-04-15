@@ -14,32 +14,37 @@ public class AirportManager {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
-    
-                if (parts.length >= 6) {
-                    String ICAO = parts[1].trim();
-                    String name = parts[2].trim();
-                    double latitude = Double.parseDouble(parts[3].trim());
-                    double longitude = Double.parseDouble(parts[4].trim());
-    
-                    // Converting frequencies into HashMap<String, Double>
-                    HashMap<String, Double> frequencies = new HashMap<>();
-                    String[] freqPairs = parts[5].trim().split(";");
-                    for (String pair : freqPairs) {
-                        String[] kv = pair.split(":");
-                        if (kv.length == 2) {
-                            frequencies.put(kv[0].trim(), Double.parseDouble(kv[1].trim()));
+
+                String ICAO = parts[0].trim();
+                String name = parts[1].trim();
+                double latitude = Double.parseDouble(parts[2].trim());
+                double longitude = Double.parseDouble(parts[3].trim());
+
+                HashMap<String, Double> frequencies = new HashMap<>();
+                String[] freqPairs = parts[4].trim().replaceAll("[{}]", "").split(";");
+
+                for (String pair : freqPairs) {
+                    String[] kv = pair.split(":");
+                    if (kv.length == 2) {
+                        String key = kv[0].trim();
+                        String value = kv[1].trim();
+                        if (!value.isEmpty()) {
+                            try {
+                                frequencies.put(key, Double.parseDouble(value));
+                            } catch (NumberFormatException e) {
+                                System.err.println("Invalid number format for key: " + key + " value: " + value);
+                            }
                         }
                     }
-    
-                    // Converting fuel types into String[]
-                    String[] fuelTypes = {};
-                    if (parts.length >= 7) {
-                        fuelTypes = parts[6].trim().split(";");
-                    }
-    
-                    Airport airport = new Airport(ICAO, name, latitude, longitude, frequencies, fuelTypes);
-                    airports.add(airport);
                 }
+
+                // Converting fuel types into String[]
+                String[] fuelTypes = {};
+                fuelTypes = parts[5].trim().split(";");
+
+                Airport airport = new Airport(ICAO, name, latitude, longitude, frequencies, fuelTypes);
+                airports.add(airport);
+
             }
         } catch (IOException e) {
             System.out.println("Error reading file: " + e.getMessage());
@@ -55,7 +60,7 @@ public class AirportManager {
                 bw.write(airport.toCSV());
                 bw.newLine();
             }
-            
+
             // File writing finished, now we can update
             // First rename the temp file to the original file, then delete the temp file
             File originalFile = new File(fileName);
@@ -67,7 +72,6 @@ public class AirportManager {
             System.out.println("Error writing to file: " + e.getMessage());
         }
     }
-    
 
     private boolean exists(Airport airport) {
         return airports.contains(airport);
@@ -105,7 +109,7 @@ public class AirportManager {
 
     public void displayAirport(Airport airport) {
         if (exists(airport)) {
-            String airportInformation = airport.displayInfo(); 
+            String airportInformation = airport.displayInfo();
             System.out.println(airportInformation);
         } else {
             System.out.println("Could not display Airport, Airport not found");
@@ -117,7 +121,7 @@ public class AirportManager {
             System.out.println("No airports available to display.");
         } else {
             for (Airport airport : airports) {
-                String airportInformation = airport.displayInfo(); 
+                String airportInformation = airport.displayInfo();
                 System.out.println(airportInformation);
             }
         }
