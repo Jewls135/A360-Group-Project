@@ -5,12 +5,22 @@ import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
 
+/**
+ * FlightManagementSystem provides a console-based interface for managing
+ * airports,
+ * airplanes, and planning flight routes between multiple airports.
+ */
 class FlightManagementSystem {
     Flight flight;
     AirportManager airportManager;
     AirplaneManager airplaneManager;
     private static final Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Entry point for the Flight Management System application.
+     * 
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args) {
         FlightManagementSystem fms = new FlightManagementSystem();
         try {
@@ -20,6 +30,11 @@ class FlightManagementSystem {
         }
     }
 
+    /**
+     * Reads non-empty string input from the user via the console.
+     * 
+     * @return A valid, non-empty user input string.
+     */
     private String getUserInputString() {
         String input = "";
         while (true) {
@@ -39,11 +54,15 @@ class FlightManagementSystem {
         return input;
     }
 
+    /**
+     * Reads a valid integer input from the user.
+     * 
+     * @return A valid integer.
+     */
     private int getUserInputInt() {
         int input = -1;
 
         while (true) {
-
             try {
                 System.out.print("\nInput: ");
                 String line = scanner.nextLine();
@@ -66,11 +85,15 @@ class FlightManagementSystem {
         return input;
     }
 
+    /**
+     * Reads a valid double input from the user.
+     * 
+     * @return A valid double.
+     */
     private double getUserInputDouble() {
         double input;
 
         while (true) {
-
             try {
                 System.out.print("\nInput: ");
                 String line = scanner.nextLine();
@@ -93,6 +116,9 @@ class FlightManagementSystem {
         return input;
     }
 
+    /**
+     * Displays the main menu and handles user navigation through options.
+     */
     private void displayOptions() {
         // Initially populating databases
         updateDatabases();
@@ -133,14 +159,20 @@ class FlightManagementSystem {
         }
     }
 
+    /**
+     * Initializes or updates the airplane and airport databases.
+     */
     private void updateDatabases() {
-        // Initializing / populating both manager objects
         airportManager = new AirportManager();
         airplaneManager = new AirplaneManager();
     }
 
+    /**
+     * Handles user selection of an airplane from the available list.
+     * 
+     * @return The selected Airplane object, or null if invalid.
+     */
     private Airplane handleAirplaneChoice() {
-        // Getting airplane choice
         ArrayList<Airplane> airplanes = airplaneManager.getAirplanes();
         if (airplanes.isEmpty()) {
             System.out.println("No airplanes available, please add them");
@@ -158,18 +190,22 @@ class FlightManagementSystem {
             return null;
         }
 
-        Airplane selectedAirplane = airplanes.get(airplaneIndex);
-        return selectedAirplane;
+        return airplanes.get(airplaneIndex);
     }
 
+    /**
+     * Handles the user selection of a start airport and one or more destination
+     * airports.
+     * 
+     * @return A list of airports representing the flight path.
+     */
     private ArrayList<Airport> handleAirportChoice() {
         System.out.println("Available Airports:");
         airportManager.displayAllAirports();
         Airport startAirport;
         while (true) {
-            // Getting starting airport
             System.out.println("\nEnter starting airport (ICAO or part of name):");
-            String startInput = getUserInputString(); // Get user input as string
+            String startInput = getUserInputString();
             ArrayList<Airport> matchingStartAirports = findMatchingAirports(startInput);
 
             if (matchingStartAirports.isEmpty()) {
@@ -195,10 +231,10 @@ class FlightManagementSystem {
             }
             break;
         }
+
         ArrayList<Airport> destinations = new ArrayList<>();
         destinations.add(startAirport);
 
-        // Getting more airports
         while (destinations.size() < 2) {
             System.out.println("Enter destination airport (ICAO or part of name), or type 'done' to finish:");
             String destinationInput = getUserInputString();
@@ -233,6 +269,13 @@ class FlightManagementSystem {
         return destinations;
     }
 
+    /**
+     * Finds airports that match the user's input either exactly or partially.
+     * Exact matches are returned first, followed by partial matches.
+     *
+     * @param input The user's search query for airport name or ICAO code.
+     * @return A list of matching Airport objects.
+     */
     private ArrayList<Airport> findMatchingAirports(String input) {
         ArrayList<Airport> exactMatches = new ArrayList<>();
         ArrayList<Airport> partialMatches = new ArrayList<>();
@@ -255,6 +298,11 @@ class FlightManagementSystem {
         return exactMatches;
     }
 
+    /**
+     * Displays the airport management menu and handles user input
+     * for listing, adding, editing, and deleting airports.
+     * Loops until the user chooses to return to the main menu.
+     */
     private void manageAirports() {
         while (true) {
             System.out.println("1. List Airports");
@@ -271,6 +319,7 @@ class FlightManagementSystem {
                     System.out.println("\n");
                     break;
                 case 2:
+                    // Handles input for creating a new airport and adds it to the system
                     System.out.println("Enter new airport name:");
                     String name = getUserInputString();
                     String icao;
@@ -343,6 +392,7 @@ class FlightManagementSystem {
                     updateDatabases();
                     break;
                 case 3:
+                    // Handles input and editing of an existing airport
                     int selectedIndex = 0;
                     System.out.println("Enter airport name or ICAO code to edit:");
                     String input = getUserInputString();
@@ -442,11 +492,9 @@ class FlightManagementSystem {
                             }
                         }
 
-                        // Create a new airport with the updated information
                         Airport updatedAirport = new Airport(newIdentifier, newName, newLatitude, newLongitude,
                                 newFrequencies, newFuelTypes);
 
-                        // Update the airport in the airport manager
                         airportManager.editAirport(airport, updatedAirport);
                         updateDatabases();
                     } else {
@@ -455,6 +503,7 @@ class FlightManagementSystem {
 
                     break;
                 case 4:
+                    // Handles deletion of airports based on user input
                     while (true) {
                         airportManager.displayAllAirports();
 

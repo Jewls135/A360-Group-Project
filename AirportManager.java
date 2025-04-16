@@ -1,9 +1,15 @@
 import java.io.*;
 import java.util.*;
 
+/**
+ * Manages a collection of airports and performs operations such as loading, saving, adding, editing, deleting, and displaying airports.
+ */
 public class AirportManager {
     private ArrayList<Airport> airports;
 
+    /**
+     * Constructs an AirportManager and loads airports from a CSV file.
+     */
     public AirportManager() {
         airports = new ArrayList<>();
         if (!loadAirportsFromCSV("Airports.csv")){
@@ -11,6 +17,12 @@ public class AirportManager {
         }
     }
 
+    /**
+     * Loads airport data from a CSV file and populates the list of airports.
+     *
+     * @param fileName The name of the CSV file to load data from.
+     * @return true if airports were successfully loaded, false otherwise.
+     */
     private boolean loadAirportsFromCSV(String fileName) {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line;
@@ -54,16 +66,19 @@ public class AirportManager {
         return false;
     }
 
+    /**
+     * Saves the list of airports to a CSV file.
+     *
+     * @param fileName The name of the CSV file to save data to.
+     */
     private void saveAirportsToCSV(String fileName) {
         File tempFile = new File(fileName + ".tmp");
         for(int i = 0; i < 3; i++) {
             try (BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile))) {
-
                 for (Airport airport : airports) {
                     bw.write(airport.toCSV());
                     bw.newLine();
                 }
-
                 break;
             } catch (IOException e) {
                 System.out.println("Error writing to .tmp file, " + "Attempt: " + i);
@@ -74,12 +89,10 @@ public class AirportManager {
         File fileToWrite = new File(fileName);
         for(int i = 0; i < 3; i++) {
             try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileToWrite))) {
-
                 for (Airport airport : airports) {
                     bw.write(airport.toCSV());
                     bw.newLine();
                 }
-
                 break;
             } catch (IOException e) {
                 System.out.println("Error writing to .csv file, " + "Attempt: " + i);
@@ -88,10 +101,21 @@ public class AirportManager {
         }
     }
 
+    /**
+     * Checks if the specified airport already exists in the list.
+     *
+     * @param airport The airport to check for existence.
+     * @return true if the airport exists, false otherwise.
+     */
     private boolean exists(Airport airport) {
         return airports.contains(airport);
     }
 
+    /**
+     * Adds an airport to the list if it does not already exist, then saves the list to a CSV file.
+     *
+     * @param airport The airport to add.
+     */
     public void addAirport(Airport airport) {
         if (!exists(airport)) {
             airports.add(airport);
@@ -101,10 +125,20 @@ public class AirportManager {
         }
     }
 
+    /**
+     * Returns the list of all airports managed by this AirportManager.
+     *
+     * @return An ArrayList containing all airports.
+     */
     public ArrayList<Airport> getAirports() {
         return airports;
     }
 
+    /**
+     * Deletes the specified airport from the list and saves the updated list to a CSV file.
+     *
+     * @param airport The airport to delete.
+     */
     public void deleteAirport(Airport airport) {
         if (exists(airport)) {
             airports.remove(airport);
@@ -114,6 +148,12 @@ public class AirportManager {
         }
     }
 
+    /**
+     * Edits an existing airport by removing the old airport and adding the new one, then saves the updated list to a CSV file.
+     *
+     * @param oldAirport The airport to be replaced.
+     * @param newAirport The new airport to replace the old one.
+     */
     public void editAirport(Airport oldAirport, Airport newAirport) {
         System.out.println("in editAirport");
         if(airports.contains(oldAirport)){
@@ -124,6 +164,11 @@ public class AirportManager {
         }
     }
 
+    /**
+     * Displays detailed information about the specified airport.
+     *
+     * @param airport The airport whose information is to be displayed.
+     */
     public void displayAirport(Airport airport) {
         if (exists(airport)) {
             String airportInformation = airport.displayInfo();
@@ -133,6 +178,9 @@ public class AirportManager {
         }
     }
 
+    /**
+     * Displays detailed information about all airports managed by this AirportManager.
+     */
     public void displayAllAirports() {
         if (airports.isEmpty()) {
             System.out.println("No airports available to display.");

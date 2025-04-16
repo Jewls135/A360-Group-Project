@@ -1,6 +1,10 @@
 import java.util.HashMap;
 
+/**
+ * Represents an airport with details such as identifier, name, location, frequencies, and fuel types.
+ */
 public class Airport {
+    
     private String identifier;
     private String name;
     private double latitude;
@@ -8,6 +12,16 @@ public class Airport {
     private HashMap<String, Double> frequencies;
     private String[] fuelTypes;
 
+    /**
+     * Constructs an Airport object with the given details.
+     *
+     * @param identifier The ICAO identifier of the airport.
+     * @param name The name of the airport.
+     * @param latitude The latitude of the airport.
+     * @param longitude The longitude of the airport.
+     * @param frequencies A map of frequencies available at the airport, with the frequency name as the key and frequency value as the value.
+     * @param fuelTypes A list of fuel types available at the airport.
+     */
     public Airport(String identifier, String name, double latitude, double longitude,
             HashMap<String, Double> frequencies, String[] fuelTypes) {
         setIdentifier(identifier);
@@ -18,42 +32,92 @@ public class Airport {
         setFuelTypes(fuelTypes);
     }
 
+    /**
+     * Returns the ICAO identifier of the airport.
+     *
+     * @return The ICAO identifier of the airport.
+     */
     public String getIdentifier() {
         return identifier;
     }
 
+    /**
+     * Sets the ICAO identifier of the airport.
+     *
+     * @param newIdentifier The new ICAO identifier to set.
+     */
     private void setIdentifier(String newIdentifier) {
         identifier = newIdentifier;
     }
 
+    /**
+     * Returns the name of the airport.
+     *
+     * @return The name of the airport.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the name of the airport.
+     *
+     * @param newName The new name of the airport.
+     */
     private void setName(String newName) {
         name = newName;
     }
 
+    /**
+     * Returns the latitude of the airport.
+     *
+     * @return The latitude of the airport.
+     */
     public double getLatitude() {
         return latitude;
     }
 
+    /**
+     * Sets the latitude of the airport.
+     *
+     * @param newLatitude The new latitude of the airport.
+     */
     private void setLatitude(double newLatitude) {
         latitude = newLatitude;
     }
 
+    /**
+     * Returns the longitude of the airport.
+     *
+     * @return The longitude of the airport.
+     */
     public double getLongitude() {
         return longitude;
     }
 
+    /**
+     * Sets the longitude of the airport.
+     *
+     * @param newLongitude The new longitude of the airport.
+     */
     private void setLongitude(double newLongitude) {
         longitude = newLongitude;
     }
 
+    /**
+     * Returns a map of the frequencies available at the airport.
+     *
+     * @return A map of frequencies with the frequency name as the key and frequency value as the value.
+     */
     public HashMap<String, Double> getFrequencies() {
         return frequencies;
     }
 
+    /**
+     * Sets the frequencies available at the airport.
+     *
+     * @param newFrequencies A map of frequencies with the frequency name as the key and frequency value as the value.
+     */
     private void setFrequencies(HashMap<String, Double> newFrequencies) {
         frequencies = new HashMap<>();
         for (HashMap.Entry<String, Double> entry : newFrequencies.entrySet()) {
@@ -62,14 +126,29 @@ public class Airport {
         }
     }
 
+    /**
+     * Returns the list of fuel types available at the airport.
+     *
+     * @return An array of fuel types available at the airport.
+     */
     public String[] getFuelTypes() {
         return fuelTypes;
     }
 
+    /**
+     * Sets the fuel types available at the airport.
+     *
+     * @param newFuelTypes An array of fuel types available at the airport.
+     */
     private void setFuelTypes(String[] newFuelTypes) {
         fuelTypes = newFuelTypes;
     }
 
+    /**
+     * Converts the airport details into a CSV string representation.
+     *
+     * @return A CSV string containing the airport's identifier, name, location, frequencies, and fuel types.
+     */
     public String toCSV() {
         StringBuilder sb = new StringBuilder();
 
@@ -90,6 +169,11 @@ public class Airport {
         return sb.toString();
     }
 
+    /**
+     * Returns a string representation of the airport with its details including identifier, name, location, frequencies, and fuel types.
+     *
+     * @return A string with formatted airport information.
+     */
     public String displayInfo() {
         StringBuilder sb = new StringBuilder();
         sb.append("Identifier: ").append(identifier).append(", ");
