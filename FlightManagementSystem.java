@@ -22,11 +22,14 @@ class FlightManagementSystem {
      * @param args command-line arguments (not used)
      */
     public static void main(String[] args) {
-        FlightManagementSystem fms = new FlightManagementSystem();
-        try {
-            fms.displayOptions();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        boolean quit = false;
+        while (!quit) {
+            FlightManagementSystem fms = new FlightManagementSystem();
+            try {
+                quit = fms.displayOptions();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
@@ -118,8 +121,10 @@ class FlightManagementSystem {
 
     /**
      * Displays the main menu and handles user navigation through options.
+     * 
+     * @return A boolean value to quit using the software.
      */
-    private void displayOptions() {
+    private boolean displayOptions() {
         // Initially populating databases
         updateDatabases();
         flight = new Flight();
@@ -152,9 +157,9 @@ class FlightManagementSystem {
                     break;
                 case 4:
                     System.out.println("Thank you for using this software.");
-                    return;
+                    return true;
                 default:
-                    System.out.println("Invalid choice, please enter a valid option.");
+                    System.out.println("Invalid choice, please enter a valid option. \n");
             }
         }
     }
@@ -549,7 +554,7 @@ class FlightManagementSystem {
                 case 5:
                     return;
                 default:
-                    System.out.println("Invalid choice.");
+                    System.out.println("Invalid choice, please enter a valid option.\n");
             }
         }
     }
@@ -583,14 +588,32 @@ class FlightManagementSystem {
                         }
                         break;
                     }
+                    double tankSize;
+
                     System.out.println("Enter tank size (Gallons):");
-                    double tankSize = getUserInputDouble();
+                    while (true) {
+                        tankSize = getUserInputDouble();
+                        if (tankSize > 0) {
+                            break;
+                        } else {
+                            System.out.println("Invalid input. Tank size must be greater than 0.");
+                        }
+                    }
 
                     System.out.println("Enter fuel burn rate (Gallons per hour):");
                     double fuelBurnRate = getUserInputDouble();
 
+                    double airspeed;
+
                     System.out.println("Enter airspeed: (In Km/h)");
-                    double airspeed = getUserInputDouble();
+                    while (true) {
+                        airspeed = getUserInputDouble();
+                        if (airspeed > 0) {
+                            break;
+                        } else {
+                            System.out.println("Invalid input, Airspeed must be greater than 0.");
+                        }
+                    }
 
                     airplaneManager.addAirplane(new Airplane(airplaneManager.getAirplanes().size(), model, type,
                             tankSize, fuelBurnRate, airspeed));
@@ -666,8 +689,15 @@ class FlightManagementSystem {
                             System.out.println("Would you like to edit the tank size? [Y/N]");
                             yesOrNoInput = getUserInputString().trim().toUpperCase();
                             if (yesOrNoInput.equals("Y")) {
-                                System.out.println("Enter new tank size (Gallons):");
-                                newTankSize = getUserInputDouble();
+                                System.out.println("Enter tank size (Gallons):");
+                                while (true) {
+                                    newTankSize = getUserInputDouble();
+                                    if (newTankSize > 0) {
+                                        break;
+                                    } else {
+                                        System.out.println("Invalid input. Tank size must be greater than 0");
+                                    }
+                                }
                                 break;
                             } else if (yesOrNoInput.equals("N")) {
                                 break;
@@ -696,8 +726,15 @@ class FlightManagementSystem {
                             System.out.println("Would you like to edit the airspeed? [Y/N]");
                             yesOrNoInput = getUserInputString().trim().toUpperCase();
                             if (yesOrNoInput.equals("Y")) {
-                                System.out.println("Enter new airspeed (Km/h):");
-                                newAirspeed = getUserInputDouble();
+                                System.out.println("Enter airspeed: (In Km/h)");
+                                while (true) {
+                                    newAirspeed = getUserInputDouble();
+                                    if (newAirspeed > 0) {
+                                        break;
+                                    } else {
+                                        System.out.println("Invalid input, Airspeed must be greater than 0.");
+                                    }
+                                }
                                 break;
                             } else if (yesOrNoInput.equals("N")) {
                                 break;
@@ -739,7 +776,7 @@ class FlightManagementSystem {
                 case 5:
                     return;
                 default:
-                    System.out.println("Invalid choice.");
+                    System.out.println("Invalid choice, please enter a valid option.\n");
             }
         }
     }

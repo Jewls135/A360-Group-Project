@@ -63,7 +63,13 @@ public class Flight {
 
         // If origin and destination are the same, no route is required
         if (fromAirport.equals(toAirport)) {
-            System.out.println("Origin and destination are the same, routing is not needed!");
+            System.out.println("Origin and destination are the same, routing is not needed.\nReturning to main menu:\n");
+            return null;
+        } else if(selectedAirplane.getAirspeed() <= 0){
+            System.out.println("Airspeed is not greater than 0, route is not possible.\nReturning to main menu:\n");
+            return null;
+        } else if(selectedAirplane.getTankSize() <= 0){
+            System.out.println("Tank Size is not greater than 0, route is not possible.\nReturning to main main menu:\n");
             return null;
         }
 
