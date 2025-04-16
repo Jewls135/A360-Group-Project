@@ -329,7 +329,7 @@ class FlightManagementSystem {
                     String name = getUserInputString();
                     String icao;
                     while (true) {
-                        System.out.println("Enter ICAO code (4 Characters):");
+                        System.out.println("Enter ICAO code (4 Characters maximum):");
                         icao = getUserInputString();
                         if (icao.length() > 4) {
                             System.out.println("Invalid input, only 4 characters or less are allowed\n");
@@ -361,7 +361,7 @@ class FlightManagementSystem {
                         frequencies.put(freqName, freqValue);
                     }
 
-                    Set<String> validFuelTypes = new HashSet<>(Arrays.asList("AVGAS", "JA-a"));
+                    Set<String> validFuelTypes = new HashSet<>(Arrays.asList("avgas", "ja-a"));
                     String[] fuelTypes;
 
                     while (true) {
@@ -371,7 +371,7 @@ class FlightManagementSystem {
 
                         boolean allValid = true;
                         for (String fuel : inputFuels) {
-                            String trimmed = fuel.trim();
+                            String trimmed = fuel.trim().toLowerCase();
                             if (validFuelTypes.contains(trimmed)) {
                                 fuelTypesSet.add(trimmed);
                             } else {
@@ -431,7 +431,7 @@ class FlightManagementSystem {
                         String newName = getUserInputString();
                         String newIdentifier;
                         while (true) {
-                            System.out.println("Enter ICAO code (4 Characters):");
+                            System.out.println("Enter ICAO code (4 Characters maximum):");
                             newIdentifier = getUserInputString();
                             if (newIdentifier.length() > 4) {
                                 System.out.println("Invalid input, only 4 characters or less are allowed\n");
