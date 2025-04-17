@@ -19,7 +19,7 @@ class FlightManagementSystem {
     /**
      * Entry point for the Flight Management System application.
      * 
-     * @param args command-line arguments (not used)
+     * @param args
      */
     public static void main(String[] args) {
         boolean quit = false;
@@ -342,12 +342,27 @@ class FlightManagementSystem {
                         }
                         break;
                     }
+                    double latitude;
+                    while (true) {
+                        System.out.println("Enter latitude (-90 to 90):");
+                        latitude = getUserInputDouble();
+                        if (latitude >= -90 && latitude <= 90) {
+                            break;
+                        }
+                        System.out.println("Invalid input. Latitude must be between -90 and 90.");
+                    }
+                    latitude = Math.max(-90, Math.min(latitude, 90)); // Still clamp just in case
 
-                    System.out.println("Enter latitude:");
-                    double latitude = Math.max(-90, Math.min(getUserInputDouble(), 90));
-
-                    System.out.println("Enter longitude:");
-                    double longitude = Math.max(-180, Math.min(getUserInputDouble(), 180));
+                    double longitude;
+                    while (true) {
+                        System.out.println("Enter longitude (-180 to 180):");
+                        longitude = getUserInputDouble();
+                        if (longitude >= -180 && longitude <= 180) {
+                            break;
+                        }
+                        System.out.println("Invalid input. Longitude must be between -180 and 180.");
+                    }
+                    longitude = Math.max(-180, Math.min(longitude, 180)); // Still clamp just in case
 
                     HashMap<String, Double> frequencies = new HashMap<>();
                     while (true) {
@@ -444,12 +459,27 @@ class FlightManagementSystem {
                             }
                             break;
                         }
+                        double newLatitude;
+                        while (true) {
+                            System.out.println("Enter latitude (-90 to 90):");
+                            newLatitude = getUserInputDouble();
+                            if (newLatitude >= -90 && newLatitude <= 90) {
+                                break;
+                            }
+                            System.out.println("Invalid input. Latitude must be between -90 and 90.");
+                        }
+                        newLatitude = Math.max(-90, Math.min(newLatitude, 90));
 
-                        System.out.println("Enter latitude:");
-                        double newLatitude = Math.max(-90, Math.min(getUserInputDouble(), 90));
-
-                        System.out.println("Enter longitude:");
-                        double newLongitude = Math.max(-180, Math.min(getUserInputDouble(), 180));
+                        double newLongitude;
+                        while (true) {
+                            System.out.println("Enter longitude (-180 to 180):");
+                            newLongitude = getUserInputDouble();
+                            if (newLongitude >= -180 && newLongitude <= 180) {
+                                break;
+                            }
+                            System.out.println("Invalid input. Longitude must be between -180 and 180.");
+                        }
+                        newLongitude = Math.max(-180, Math.min(newLongitude, 180));
 
                         HashMap<String, Double> newFrequencies = new HashMap<>();
 
@@ -605,7 +635,7 @@ class FlightManagementSystem {
 
                     double airspeed;
 
-                    System.out.println("Enter airspeed: (In Km/h)");
+                    System.out.println("Enter airspeed: (In Knots)");
                     while (true) {
                         airspeed = getUserInputDouble();
                         if (airspeed > 0) {
@@ -726,7 +756,7 @@ class FlightManagementSystem {
                             System.out.println("Would you like to edit the airspeed? [Y/N]");
                             yesOrNoInput = getUserInputString().trim().toUpperCase();
                             if (yesOrNoInput.equals("Y")) {
-                                System.out.println("Enter airspeed: (In Km/h)");
+                                System.out.println("Enter airspeed: (In Knots)");
                                 while (true) {
                                     newAirspeed = getUserInputDouble();
                                     if (newAirspeed > 0) {

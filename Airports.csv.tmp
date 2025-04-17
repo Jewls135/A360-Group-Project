@@ -381,8 +381,10 @@ YCTM,Cootamundra Airport,-34.6239,148.028,AM:126.7,JA-a
 YDBI,Dirranbandi Airport,-28.5917,148.217,AM:126.7,JA-a;AVGAS
 YDLQ,Deniliquin Airport,-35.5594,144.946,AM:119.0,JA-a
 YDYS,Dysart Airport,-22.6222,148.364,AM:126.7,AVGAS
-YECH,Echuca Airport,-36.1572,144.762,AM:119.1,AVGAS
 YFBS,Forbes Airport,-33.3636,147.935,AM:126.7,AVGAS
 YGDH,Gunnedah Airport,-30.9611,150.251,AM:127.4,AVGAS
 YHAY,Hay Airport,-34.5314,144.83,AM:126.7,AVGAS
 def,test,20.0,20.0,,avgas;ja-a
+CYYZ,Toronto Aiport,43.6,79.6,,avgas
+KATL,Atlanta International,33.6367,84.4281,,avgas
+ABCD,Boeing,-90.0,-180.0,AM:88.0,ja-a

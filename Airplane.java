@@ -162,6 +162,6 @@ public class Airplane {
                 +
                 ", Tank Size: " + tankSize + " Gallons" +
                 ", Fuel Burn Rate: " + fuelBurnRate + " G/h" +
-                ", Airspeed: " + airspeed + " Km/h";
+                ", Airspeed: " + airspeed + " Knots";
     }
 }

@@ -1,8 +1,10 @@
 import java.lang.Math;
 
 /**
- * Represents an edge between two airports, with properties such as distance and heading.
- * This class calculates the distance and heading between two airports based on their
+ * Represents an edge between two airports, with properties such as distance and
+ * heading.
+ * This class calculates the distance and heading between two airports based on
+ * their
  * geographic coordinates.
  */
 public class Edge {
@@ -13,9 +15,10 @@ public class Edge {
     private final double KNOT_CONVERSION = 60; // Conversion factor from degrees to nautical miles
 
     /**
-     * Constructs an Edge object between two airports and calculates the distance and heading.
+     * Constructs an Edge object between two airports and calculates the distance
+     * and heading.
      *
-     * @param origin The origin airport.
+     * @param origin      The origin airport.
      * @param destination The destination airport.
      */
     public Edge(Airport origin, Airport destination) {
@@ -26,15 +29,16 @@ public class Edge {
     }
 
     /**
-     * Calculates the great-circle distance between the two airports in nautical miles (knots).
+     * Calculates the great-circle distance between the two airports in nautical
+     * miles (knots).
      * 
      * @return The distance between the origin and destination airports in knots.
      */
     private double calculateDistance() {
         double lat1 = originNode.getLatitude();
-        double lon1 = originNode.getLongitude();
+        double lon1 = -originNode.getLongitude();
         double lat2 = destinationNode.getLatitude();
-        double lon2 = destinationNode.getLongitude();
+        double lon2 = -destinationNode.getLongitude();
         double deltaLat = lat2 - lat1;
         double deltaLon = lon2 - lon1;
         double degreeDistance = Math.sqrt(Math.pow(deltaLat, 2) + Math.pow(deltaLon, 2));
@@ -44,14 +48,15 @@ public class Edge {
     /**
      * Calculates the heading between the two airports in degrees.
      * 
-     * @return The heading in degrees from the origin airport to the destination airport.
+     * @return The heading in degrees from the origin airport to the destination
+     *         airport.
      */
     private double calculateHeading() {
         double lat1 = Math.toRadians(originNode.getLatitude());
-        double lon1 = Math.toRadians(originNode.getLongitude());
+        double lon1 = Math.toRadians(-originNode.getLongitude());
         double lat2 = Math.toRadians(destinationNode.getLatitude());
-        double lon2 = Math.toRadians(destinationNode.getLongitude());
-    
+        double lon2 = Math.toRadians(-destinationNode.getLongitude());
+
         double dLon = lon2 - lon1;
         double y = Math.sin(dLon) * Math.cos(lat2);
         double x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
@@ -89,7 +94,8 @@ public class Edge {
     }
 
     /**
-     * Sets the destination airport of this edge, recalculating the distance and heading.
+     * Sets the destination airport of this edge, recalculating the distance and
+     * heading.
      *
      * @param destinationNode The new destination airport.
      */

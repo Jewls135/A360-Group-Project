@@ -11,8 +11,7 @@ import java.util.PriorityQueue;
 public class Flight {
     Graph airportsGraph;
     private final String LINE_SEPARATOR = "--------------------------------";
-    private final double KNOT_CONVERSION = 1.852;
-
+    
     /**
      * Plans a flight route between a list of destination airports.
      *
@@ -98,9 +97,9 @@ public class Flight {
             // Process all neighboring airports connected by edges
             for (Edge edge : airportsGraph.getListings().getOrDefault(current, new ArrayList<>())) {
                 Airport nextAirport = edge.getDestinationNode();
-                double legDistance = edge.getDistance() * KNOT_CONVERSION;
+                double legDistance = edge.getDistance();
 
-                double airspeed = selectedAirplane.getAirspeed(); // in km/h
+                double airspeed = selectedAirplane.getAirspeed(); // in knots
                 double fuelBurnRate = selectedAirplane.getFuelBurnRate(); // in gallons/hour
 
                 double flightTimeHours = legDistance / airspeed;
@@ -164,9 +163,8 @@ public class Flight {
      */
     private double calculateLegFlightTime(Edge leg, Airplane selectedAirplane) {
         double distanceInKnots = leg.getDistance();
-        double distanceInKm = distanceInKnots * KNOT_CONVERSION;
-        double airspeedInKmh = selectedAirplane.getAirspeed();
-        double timeInHours = distanceInKm / airspeedInKmh;
+        double airspeedInKnots = selectedAirplane.getAirspeed();
+        double timeInHours = distanceInKnots / airspeedInKnots;
         return timeInHours;
     }
 
@@ -191,7 +189,7 @@ public class Flight {
             double time = calculateLegFlightTime(leg, selectedAirplane);
 
             flightPlan.append((i + 1) + ". " + from + " to " + to + "\n" +
-                    "   Distance: " + String.format("%.2f Knots", distance) + "\n" +
+                    "   Distance: " + String.format("%.2f Nautical Miles", distance) + "\n" +
                     "   Heading: " + String.format("%.1f°", heading) + "\n" +
                     "   Time Taken: " + String.format("%.2f Hours", time) + "\n" + LINE_SEPARATOR + "\n");
         }
