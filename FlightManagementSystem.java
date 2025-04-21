@@ -7,8 +7,7 @@ import java.util.Set;
 
 /**
  * FlightManagementSystem provides a console-based interface for managing
- * airports,
- * airplanes, and planning flight routes between multiple airports.
+ * airports, airplanes, and planning flight routes between multiple airports.
  */
 class FlightManagementSystem {
     Flight flight;
@@ -343,8 +342,8 @@ class FlightManagementSystem {
                         break;
                     }
                     double latitude;
+                    System.out.println("Enter latitude (-90 to 90):");
                     while (true) {
-                        System.out.println("Enter latitude (-90 to 90):");
                         latitude = getUserInputDouble();
                         if (latitude >= -90 && latitude <= 90) {
                             break;
@@ -354,8 +353,8 @@ class FlightManagementSystem {
                     latitude = Math.max(-90, Math.min(latitude, 90)); // Still clamp just in case
 
                     double longitude;
+                    System.out.println("Enter longitude (-180 to 180):");
                     while (true) {
-                        System.out.println("Enter longitude (-180 to 180):");
                         longitude = getUserInputDouble();
                         if (longitude >= -180 && longitude <= 180) {
                             break;
@@ -379,8 +378,9 @@ class FlightManagementSystem {
                     Set<String> validFuelTypes = new HashSet<>(Arrays.asList("avgas", "ja-a"));
                     String[] fuelTypes;
 
+                    System.out.println("Enter fuel types, Options: AVGAS, JA-a (Comma-separated if multiple)");
+
                     while (true) {
-                        System.out.println("Enter fuel types, Options: AVGAS, JA-a (Comma-separated if multiple)");
                         String[] inputFuels = getUserInputString().split(",");
                         Set<String> fuelTypesSet = new HashSet<>();
 
@@ -390,7 +390,7 @@ class FlightManagementSystem {
                             if (validFuelTypes.contains(trimmed)) {
                                 fuelTypesSet.add(trimmed);
                             } else {
-                                System.out.println("Invalid fuel type entered: " + fuel.trim());
+                                System.out.println("Invalid fuel type entered: " + fuel.trim()+ "\n");
                                 allValid = false;
                                 break;
                             }
@@ -460,8 +460,8 @@ class FlightManagementSystem {
                             break;
                         }
                         double newLatitude;
+                        System.out.println("Enter latitude (-90 to 90):");
                         while (true) {
-                            System.out.println("Enter latitude (-90 to 90):");
                             newLatitude = getUserInputDouble();
                             if (newLatitude >= -90 && newLatitude <= 90) {
                                 break;
@@ -471,8 +471,8 @@ class FlightManagementSystem {
                         newLatitude = Math.max(-90, Math.min(newLatitude, 90));
 
                         double newLongitude;
+                        System.out.println("Enter longitude (-180 to 180):");
                         while (true) {
-                            System.out.println("Enter longitude (-180 to 180):");
                             newLongitude = getUserInputDouble();
                             if (newLongitude >= -180 && newLongitude <= 180) {
                                 break;
@@ -498,8 +498,9 @@ class FlightManagementSystem {
                         Set<String> validFuelType = new HashSet<>(Arrays.asList("avgas", "ja-a"));
                         String[] newFuelTypes;
 
+                        System.out.println("Enter fuel types, Options: AVGAS, JA-a (Comma-separated if multiple)");
+
                         while (true) {
-                            System.out.println("Enter fuel types, Options: AVGAS, JA-a (Comma-separated if multiple)");
                             String[] inputFuels = getUserInputString().split(",");
                             Set<String> fuelTypesSet = new HashSet<>();
 
