@@ -1,3 +1,3 @@
-# A360-Group-Project
+# Flight Planning System
 
 An Airport/Airplane flight management system.
